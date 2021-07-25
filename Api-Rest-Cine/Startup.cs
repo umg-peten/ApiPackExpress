@@ -1,3 +1,7 @@
+using Api_Rest_Cine.AppDbContext;
+using Api_Rest_Cine.Helpers;
+using Api_Rest_Cine.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,9 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Api_Rest_Cine
@@ -26,6 +32,37 @@ namespace Api_Rest_Cine
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<ITokenHandler, Helpers.TokenHandler>();
+            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddScoped<IConnection, Connection>();
+            
+
+
+            //Json Web Token implementation
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // [ JWT ]
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var secretKey = Encoding.ASCII.GetBytes(appSettings.tokenSecretKey);
+            services.AddAuthentication(d =>
+            {
+                d.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                d.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(d =>
+                {
+                    d.RequireHttpsMetadata = false;
+                    d.SaveToken = true;
+                    d.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
