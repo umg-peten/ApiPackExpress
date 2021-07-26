@@ -1,4 +1,4 @@
-# C# Coding Standards and Naming Conventions
+# Estandar de codigo y nombramiento C# 
 
 | Nombre del objeto         | Notacion   | Longitud | Plural | Prefijo | Sufijo | Abreviatura | Caracteres admitidos  | Guiones bajos |
 |:--------------------------|:-----------|-------:|:-------|:-------|:-------|:-------------|:-------------------|:------------|
