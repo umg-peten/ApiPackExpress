@@ -1,4 +1,5 @@
 ﻿using Api_Rest_Cine.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Api_Rest_Cine.Controllers
-{
+{   
+    
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
@@ -31,6 +33,7 @@ namespace Api_Rest_Cine.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            var claims = User.Claims;
             var rng = new Random();
             //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             //{
