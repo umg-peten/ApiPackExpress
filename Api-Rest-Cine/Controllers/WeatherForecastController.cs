@@ -1,4 +1,5 @@
-﻿using Api_Rest_Cine.IServices;
+﻿using ApiPackExpress.IServices;
+using ApiPackExpress.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,12 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api_Rest_Cine.Controllers
+namespace ApiPackExpress.Controllers
 {   
     
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController : Controller
     {
         private readonly ITokenHandler _token;
     
@@ -33,6 +34,7 @@ namespace Api_Rest_Cine.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+
             var claims = User.Claims;
             var rng = new Random();
             //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -42,8 +44,12 @@ namespace Api_Rest_Cine.Controllers
             //    Summary = Summaries[rng.Next(Summaries.Length)]
             //})
             //.ToArray();
+            oResponse response = new oResponse() {
+                status = 1,
+                data = _token.GenerateToken("usuario1")
+            };
 
-            return Ok(_token.GenerateToken("putas"));
+            return Ok(response);
         }
     }
 }

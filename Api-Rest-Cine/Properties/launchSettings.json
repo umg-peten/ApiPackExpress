@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Api_Rest_Cine": {
+    "ApiPackExpress": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "weatherforecast",

@@ -1,6 +1,6 @@
-using Api_Rest_Cine.AppDbContext;
-using Api_Rest_Cine.Helpers;
-using Api_Rest_Cine.IServices;
+using ApiPackExpress.AppDbContext;
+using ApiPackExpress.Helpers;
+using ApiPackExpress.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Api_Rest_Cine
+namespace ApiPackExpress
 {
     public class Startup
     {
@@ -35,7 +35,7 @@ namespace Api_Rest_Cine
             services.AddScoped<ITokenHandler, Helpers.TokenHandler>();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddScoped<IConnection, Connection>();
-            
+
 
 
             //Json Web Token implementation
@@ -77,7 +77,10 @@ namespace Api_Rest_Cine
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Api_Rest_Cine
+namespace ApiPackExpress
 {
     public class WeatherForecast
     {
