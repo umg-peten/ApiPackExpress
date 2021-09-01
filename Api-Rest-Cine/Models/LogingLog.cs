@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api_Rest_Cine.Models
+namespace ApiPackExpress.Models
 {
     public class LogingLog
     {

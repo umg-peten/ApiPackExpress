@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace ApiPackExpress.Models
 {
-    public class Gender
+    public class oResponse
     {
-        public int GenderId { get; set; }
-        public string GenderName { get; set; }
+        public int status { get; set; }
+        public Object data { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Api_Rest_Cine.IServices;
+﻿using ApiPackExpress.IServices;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api_Rest_Cine.AppDbContext
+namespace ApiPackExpress.AppDbContext
 {
     public class Connection : IConnection
     {

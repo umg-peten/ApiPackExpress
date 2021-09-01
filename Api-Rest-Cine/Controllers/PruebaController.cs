@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api_Rest_Cine.Controllers
+namespace ApiPackExpress.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class PruebaController : ControllerBase
+    [Authorize]
+    public class PruebaController : Controller
     {
         public IActionResult prueba()
         {
