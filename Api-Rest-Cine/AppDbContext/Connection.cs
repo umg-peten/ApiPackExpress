@@ -18,7 +18,7 @@ namespace ApiPackExpress.AppDbContext
 
         public string GetConnectionString()
         {
-            string connectionString = ConfigurationExtensions.GetConnectionString(this._confing, "GoogleCloudServerDB");
+            string connectionString = ConfigurationExtensions.GetConnectionString(this._confing, "LocalDB");
             return connectionString;
         }
 

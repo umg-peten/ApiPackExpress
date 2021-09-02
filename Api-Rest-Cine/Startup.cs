@@ -1,6 +1,7 @@
 using ApiPackExpress.AppDbContext;
 using ApiPackExpress.Helpers;
 using ApiPackExpress.IServices;
+using ApiPackExpress.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,7 @@ namespace ApiPackExpress
             services.AddScoped<ITokenHandler, Helpers.TokenHandler>();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddScoped<IConnection, Connection>();
+            services.AddScoped<IAuthService, AuthServices>();
 
 
 

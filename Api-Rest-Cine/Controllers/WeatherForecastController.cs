@@ -44,10 +44,11 @@ namespace ApiPackExpress.Controllers
             //    Summary = Summaries[rng.Next(Summaries.Length)]
             //})
             //.ToArray();
-            oResponse response = new oResponse() {
-                status = 1,
-                data = _token.GenerateToken("usuario1")
+            oResponse response = new oResponse()
+            {
+                
             };
+            
 
             return Ok(response);
         }
