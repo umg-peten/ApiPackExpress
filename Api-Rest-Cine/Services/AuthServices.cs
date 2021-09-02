@@ -13,15 +13,19 @@ namespace ApiPackExpress.Services
     {
         private readonly IConnection _connection;
         private readonly ITokenHandler _token;
-        private BitacoraWS _bitacoraWS;
+        private readonly IBitacoraWSService _bitacoraWS;
+        private BitacoraWS bitacoraWS;
         private oResponse oResponse;
-        public AuthServices(IConnection connection, ITokenHandler token)
+        public AuthServices(IConnection connection, ITokenHandler token, IBitacoraWSService bitacoraWS)
         {
+            this._bitacoraWS = bitacoraWS;
             this._token = token;
             this._connection = connection;
         }
-        public oResponse  Authentication(AuthDto auth)
+        public oResponse Authentication(AuthDto auth)
         {
+            bitacoraWS = new BitacoraWS("Ok", "Authentication-Controller", auth.username);
+
             oResponse = new oResponse();
             EmployeeDTO employee = new EmployeeDTO();
 
@@ -29,7 +33,6 @@ namespace ApiPackExpress.Services
             {
                 using (var sqlCon = _connection.GetSqlConnection(_connection.GetConnectionString()))
                 {
-
                     SqlCommand command = new SqlCommand("SPAuthentication", sqlCon);
                     command.CommandType = System.Data.CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@_USERNAME", auth.username);
@@ -69,44 +72,25 @@ namespace ApiPackExpress.Services
                     }
                     else
                     {
+                        this.bitacoraWS.MessageError = "Usuario o contraseña incorrecta";
                         oResponse.status = 401;
                         oResponse.message = "Usuario o contraseña incorrecta";
                         oResponse.data = null;
 
                     }
 
+                    _bitacoraWS.InsertBitacoraWS(this.bitacoraWS);
                 }
             }
             catch (Exception ex)
             {
-                this._bitacoraWS = new BitacoraWS();
-                this._bitacoraWS.DateBegin = DateTime.Now;
-                this._bitacoraWS.MessageError = ex.Message + "\n" + ex.ToString();
-                this._bitacoraWS.Username = auth.username;
-                this._bitacoraWS.Section = "Authentication-Controller";
-                this._bitacoraWS.Pc = Environment.MachineName;
-                this._bitacoraWS.Ip = "localhost";
-
-                using (var SqlCon = _connection.GetSqlConnection(_connection.GetConnectionString()))
-                {
-                    SqlCommand command = new SqlCommand("SPInsertBitacoraWS", SqlCon);
-                    command.CommandType = System.Data.CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@_MessageError", _bitacoraWS.MessageError);
-                    command.Parameters.AddWithValue("@_Section", _bitacoraWS.Section);
-                    command.Parameters.AddWithValue("@_DateBegin", _bitacoraWS.DateBegin);
-                    command.Parameters.AddWithValue("@_DateEnd", _bitacoraWS.DateEnd);
-                    command.Parameters.AddWithValue("@_Username", _bitacoraWS.Username);
-                    command.Parameters.AddWithValue("@_PC", _bitacoraWS.Pc);
-                    command.Parameters.AddWithValue("@_IP", _bitacoraWS.Ip);
-                    command.Connection.Open();
-
-                    int rowsAffected = command.ExecuteNonQuery();
-
-                    oResponse.status = 500;
-                    oResponse.message = "Ha ocurrido un error en el servidor, si el problema persiste comunícate con el administrador";
-                    oResponse.data = null;
-
-                }
+                this.bitacoraWS.MessageError = ex.Message + "\n" + ex.ToString();
+               
+                _bitacoraWS.InsertBitacoraWS(this.bitacoraWS);
+                  
+                oResponse.status = 500;
+                oResponse.message = "Ha ocurrido un error en el servidor, si el problema persiste comunícate con el administrador";
+                oResponse.data = null;
 
             }
 

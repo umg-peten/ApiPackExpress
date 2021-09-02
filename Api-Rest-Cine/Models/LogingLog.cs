@@ -7,9 +7,9 @@ namespace ApiPackExpress.Models
 {
     public class LogingLog
     {
-        public int LoginLogId { get; set; }
+        public int IdLoginLog { get; set; }
         public DateTime DateLoging { get; set; }
-        public int EmployeeId { get; set; }
+        public int IdEmployee { get; set; }
         public string Token { get; set; }
     }
 }
