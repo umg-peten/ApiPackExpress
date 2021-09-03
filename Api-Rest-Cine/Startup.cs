@@ -38,6 +38,7 @@ namespace ApiPackExpress
             services.AddScoped<IConnection, Connection>();
             services.AddScoped<IAuthService, AuthServices>();
             services.AddScoped<IBitacoraWSService, BitacoraWsService>();
+            services.AddScoped<ILoginLogService, LoginLogService>();
 
 
 

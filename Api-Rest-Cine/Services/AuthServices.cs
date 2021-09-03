@@ -14,17 +14,21 @@ namespace ApiPackExpress.Services
         private readonly IConnection _connection;
         private readonly ITokenHandler _token;
         private readonly IBitacoraWSService _bitacoraWS;
+        private readonly ILoginLogService _loginLog;
         private BitacoraWS bitacoraWS;
         private oResponse oResponse;
-        public AuthServices(IConnection connection, ITokenHandler token, IBitacoraWSService bitacoraWS)
+        private LoginLog loginLog;
+        public AuthServices(IConnection connection, ITokenHandler token, IBitacoraWSService bitacoraWS, ILoginLogService loginLog)
         {
             this._bitacoraWS = bitacoraWS;
             this._token = token;
             this._connection = connection;
+            this._loginLog = loginLog;
         }
         public oResponse Authentication(AuthDto auth)
         {
             bitacoraWS = new BitacoraWS("Ok", "Authentication-Controller", auth.username);
+            
 
             oResponse = new oResponse();
             EmployeeDTO employee = new EmployeeDTO();
@@ -44,6 +48,7 @@ namespace ApiPackExpress.Services
                     {
                         while (sqlDataReader.Read())
                         {
+                            employee.IdEmployee = Int32.Parse(sqlDataReader["idEmployee"].ToString());
                             employee.Fullname = sqlDataReader["fullname"].ToString();
                             employee.Username = sqlDataReader["username"].ToString();
                             employee.Token = _token.GenerateToken(auth.username);
@@ -69,6 +74,12 @@ namespace ApiPackExpress.Services
                         oResponse.status = 200;
                         oResponse.message = "Ok";
                         oResponse.data = employee;
+
+                        loginLog = new LoginLog();
+                        loginLog.IdEmployee = employee.IdEmployee;
+                        loginLog.Token = employee.Token;
+
+                        _loginLog.insertLoginLog(loginLog);
                     }
                     else
                     {

@@ -26,13 +26,13 @@ namespace ApiPackExpress.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public IActionResult Login(AuthDto auth)
+        public IActionResult Login([FromBody] AuthDto auth)
         {
             oResponse response = new oResponse();
             
 
             if(auth.password.Trim() == "" || auth.username.Trim() == "" ||
-                auth.password == null || auth.username == null)
+                string.IsNullOrEmpty(auth.password) || string.IsNullOrEmpty(auth.username))
             {
                 response.status = 400;
                 response.message = "Bad Request";
