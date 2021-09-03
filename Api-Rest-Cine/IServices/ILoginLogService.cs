@@ -1,4 +1,4 @@
-﻿using ApiPackExpress.Dtos;
+﻿using ApiPackExpress.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ApiPackExpress.IServices
 {
-    public interface ITokenHandler
+    public interface ILoginLogService
     {
-        public string GenerateToken(EmployeeDTO employee);
+        public void insertLoginLog(LoginLog loginlog);
     }
 }

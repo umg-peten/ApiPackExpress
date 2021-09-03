@@ -15,26 +15,30 @@ namespace ApiPackExpress.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
+        private readonly IBitacoraWSService _bitacoraWS;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IBitacoraWSService bitacoraWS)
         {
+            this._bitacoraWS = bitacoraWS;
             this._authService = authService;
         }
         
 
         [HttpPost]
         [Route("Login")]
-        public IActionResult Login(AuthDto auth)
+        public IActionResult Login([FromBody] AuthDto auth)
         {
             oResponse response = new oResponse();
             
 
             if(auth.password.Trim() == "" || auth.username.Trim() == "" ||
-                auth.password == null || auth.username == null)
+                string.IsNullOrEmpty(auth.password) || string.IsNullOrEmpty(auth.username))
             {
                 response.status = 400;
                 response.message = "Bad Request";
                 response.data = new Object();
+                BitacoraWS bitacoraWS = new BitacoraWS(response.message, "Authentication-Controller", auth.username);
+                _bitacoraWS.InsertBitacoraWS(bitacoraWS);
                 return BadRequest(response);
             }
 

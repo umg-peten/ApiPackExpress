@@ -8,6 +8,7 @@ namespace ApiPackExpress.Dtos
 {
     public class EmployeeDTO
     {
+        public int IdEmployee { get; set; }
         public string Fullname { get; set; }
         public string Username { get; set; }
         public string Token { get; set; }

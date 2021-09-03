@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using ApiPackExpress.Dtos;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 using System;
@@ -18,7 +19,7 @@ namespace ApiPackExpress.Helpers
         {
             this._appSettings = appSettings.Value;
         }
-        public string GenerateToken(string username)
+        public string GenerateToken(EmployeeDTO employee)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.tokenSecretKey);
@@ -28,8 +29,11 @@ namespace ApiPackExpress.Helpers
 
                     new Claim[]
                     {
-                        new Claim("IdUsuario", username.ToString()),
-                        //new Claim(ClaimTypes.GivenName, usuario.username.ToString()),
+                        new Claim("Id", employee.IdEmployee.ToString()),
+                        new Claim("Fullname", employee.Fullname),
+                        new Claim("Username", employee.Username),
+                        new Claim("IdPosition", employee.Position.IdPosition.ToString()),
+                        new Claim("IdBranch", employee.Branch.IdBranch.ToString())
                         //new Claim(ClaimTypes.Email, usuario.email.ToString()),
                         //new Claim("rol", usuario.tipoUsuario.idTipoUsuario.ToString())
                     }),
