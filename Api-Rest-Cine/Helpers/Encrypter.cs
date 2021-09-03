@@ -57,7 +57,6 @@ namespace ApiPackExpress.Helpers
             return Convert.ToBase64String(ArrayResultado,
             0, ArrayResultado.Length);
 
-
         }
 
         public static string Decrypt(string textoEncriptado)

@@ -51,7 +51,7 @@ namespace ApiPackExpress.Services
                             employee.IdEmployee = Int32.Parse(sqlDataReader["idEmployee"].ToString());
                             employee.Fullname = sqlDataReader["fullname"].ToString();
                             employee.Username = sqlDataReader["username"].ToString();
-                            employee.Token = _token.GenerateToken(auth.username);
+                            //employee.Token = _token.GenerateToken(auth.username);
                             employee.Gender = new Gender()
                             {
                                 GenderId = Int32.Parse(sqlDataReader["idGender"].ToString()),
@@ -77,6 +77,7 @@ namespace ApiPackExpress.Services
 
                         loginLog = new LoginLog();
                         loginLog.IdEmployee = employee.IdEmployee;
+                        employee.Token = _token.GenerateToken(employee);
                         loginLog.Token = employee.Token;
 
                         _loginLog.insertLoginLog(loginLog);
