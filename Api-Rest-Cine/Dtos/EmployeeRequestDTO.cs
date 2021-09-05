@@ -17,7 +17,10 @@ namespace ApiPackExpress.Dtos
         public string Dni { get; set; }
         [Required]
         [RegularExpression(@"^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$")]
+
         public string Birthdate { get; set; }
+        [Required]
+        public string Nit { get; set; }
         [Required]
         public string Address { get; set; }
         [Required]

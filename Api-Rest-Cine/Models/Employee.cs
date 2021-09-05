@@ -12,6 +12,7 @@ namespace ApiPackExpress.Models
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Dni { get; set; }
+        public string Nit { get; set; }
         public DateTime Birthdate { get; set; }
         public string Address { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -73,5 +73,21 @@ namespace ApiPackExpress.Helpers
             return username.ToLower();
         }
 
+
+        public static string generatePw()
+        {
+            var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var Charsarr = new char[8];
+            var random = new Random();
+
+            for (int i = 0; i < Charsarr.Length; i++)
+            {
+                Charsarr[i] = characters[random.Next(characters.Length)];
+            }
+
+            var password = new String(Charsarr);
+
+            return password;
+        }
     }
 }
