@@ -13,6 +13,7 @@ namespace ApiPackExpress.Controllers
     [Authorize]
     public class PruebaController : Controller
     {
+
         public IActionResult prueba()
         {
             var claims = User.Claims;

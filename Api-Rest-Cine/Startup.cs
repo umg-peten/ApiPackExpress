@@ -39,16 +39,17 @@ namespace ApiPackExpress
             services.AddScoped<IAuthService, AuthServices>();
             services.AddScoped<IBitacoraWSService, BitacoraWsService>();
             services.AddScoped<ILoginLogService, LoginLogService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
 
 
 
             //Json Web Token implementation
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
+            var JWTSection = Configuration.GetSection("JWT");
+            services.Configure<JWT>(JWTSection);
 
             // [ JWT ]
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var secretKey = Encoding.ASCII.GetBytes(appSettings.tokenSecretKey);
+            var jwt = JWTSection.Get<JWT>();
+            var secretKey = Encoding.ASCII.GetBytes(jwt.SigningKey);
             services.AddAuthentication(d =>
             {
                 d.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,9 +62,11 @@ namespace ApiPackExpress
                     d.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(secretKey),
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                        IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+                        ValidIssuer =  jwt.Issuer,
+                        ValidAudience = jwt.Audience
                     };
                 });
 
