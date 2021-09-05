@@ -32,7 +32,7 @@ namespace ApiPackExpress.Helpers
                         new Claim("Id", employee.IdEmployee.ToString()),
                         new Claim("Fullname", employee.Fullname),
                         new Claim("Username", employee.Username),
-                        new Claim("IdPosition", employee.Position.IdPosition.ToString()),
+                        new Claim("Rol", employee.Position.IdPosition.ToString()),
                         new Claim("IdBranch", employee.Branch.IdBranch.ToString())
                         //new Claim(ClaimTypes.Email, usuario.email.ToString()),
                         //new Claim("rol", usuario.tipoUsuario.idTipoUsuario.ToString())

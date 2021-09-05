@@ -1,4 +1,4 @@
-﻿public enum Role
+﻿public enum ERole
 {
     Admin = 1,
     Distributor = 2,
