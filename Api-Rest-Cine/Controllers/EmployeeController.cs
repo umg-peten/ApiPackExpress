@@ -38,12 +38,18 @@ namespace ApiPackExpress.Controllers
                 resp.data = new Object();
                 return Unauthorized(resp);
             }
-            else
-            {
-                var emp = _employee.addEmployee(employee);
-                return Ok(emp);
-            }
             
+            var emp = _employee.addEmployee(employee);
+
+            switch(emp.status){
+                case 200:
+                    return Ok(emp);
+
+                case 500:
+                    return StatusCode(500, resp);
+            }
+
+            return BadRequest();
         }
     }
 }
