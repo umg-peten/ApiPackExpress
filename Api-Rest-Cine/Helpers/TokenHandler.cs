@@ -14,15 +14,15 @@ namespace ApiPackExpress.Helpers
 {
     public class TokenHandler : IServices.ITokenHandler
     {
-        private readonly AppSettings _appSettings;
-        public TokenHandler(IOptions<AppSettings> appSettings)
+        private readonly JWT _jwt;
+        public TokenHandler(IOptions<JWT> jwt)
         {
-            this._appSettings = appSettings.Value;
+            this._jwt = jwt.Value;
         }
         public string GenerateToken(EmployeeDTO employee)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.tokenSecretKey);
+            var key = Encoding.ASCII.GetBytes(_jwt.SigningKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(
@@ -37,7 +37,7 @@ namespace ApiPackExpress.Helpers
                         //new Claim(ClaimTypes.Email, usuario.email.ToString()),
                         //new Claim("rol", usuario.tipoUsuario.idTipoUsuario.ToString())
                     }),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddDays(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

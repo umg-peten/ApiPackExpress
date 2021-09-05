@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 
 namespace ApiPackExpress.Helpers
 {
-    public class AppSettings
+    public class JWT
     {
-        public string tokenSecretKey { get; set; }
+        public string SigningKey { get; set; }
+        public string  Issuer { get; set; }
+        public string  Audience { get; set; }
+
     }
 }
