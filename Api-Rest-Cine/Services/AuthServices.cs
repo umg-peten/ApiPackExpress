@@ -125,12 +125,11 @@ namespace ApiPackExpress.Services
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@_idEmployee", idEmployee);
                     cmd.Parameters.AddWithValue("@_pw", Helpers.Encrypter.EncryptString(pw));
-                    cmd.Parameters.AddWithValue("@_resp", respSP);
                     cmd.Connection.Open();
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (respSP)
+                    if (reader.RecordsAffected > 0)
                     {
                         oResponse.status = 1012;
                         oResponse.message = "Password actualizada correctamente";
@@ -138,7 +137,7 @@ namespace ApiPackExpress.Services
                     }
                     else
                     {
-                        oResponse.status = 1012;
+                        oResponse.status = 500;
                         oResponse.message = "Ha ocurrido un error en el servidor, intente nuevamente, si el problema persiste, contacta el administrador del sistema";
                     }
                 }
@@ -157,7 +156,7 @@ namespace ApiPackExpress.Services
                 bitacoraWS.MessageError = json;
 
                 _bitacoraWS.InsertBitacoraWS(bitacoraWS);
-                oResponse.status = 1012;
+                oResponse.status = 500;
                 oResponse.message = "Ha ocurrido un error en el servidor, intente nuevamente, si el problema persiste, contacta el administrador del sistema";
             }
             return oResponse;

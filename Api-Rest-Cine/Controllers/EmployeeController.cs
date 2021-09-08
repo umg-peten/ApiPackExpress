@@ -20,10 +20,12 @@ namespace ApiPackExpress.Controllers
     {
         private readonly IEmployeeService _employee;
         private readonly ILoginLogService _log;
+        private readonly IAuthService _auth;
         private oResponse resp;
 
-        public EmployeeController(IEmployeeService employe, ILoginLogService log)
+        public EmployeeController(IEmployeeService employe, ILoginLogService log, IAuthService auth)
         {
+            this._auth = auth;
             this._log = log;
             this._employee = employe;
         }
@@ -74,8 +76,14 @@ namespace ApiPackExpress.Controllers
                 return Ok(resp);
             }
 
+            resp = _auth.ChangePw(pw.Password, HelpersFunctions.getIdUser(User.Claims.ToList()));
+            
+            if(resp.status == 500)
+            {
+                return StatusCode(500, resp);
+            }
 
-            return Ok();
+            return Ok(resp);
 
         }
     }
