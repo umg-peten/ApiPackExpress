@@ -25,6 +25,7 @@ namespace ApiPackExpress.Services
         public oResponse addEmployee(EmployeeRequestDTO emp)
         {
             bitacoraWS = new BitacoraWS("Ok", "AddEmployee-Controller", "admin");
+            string pw = HelpersFunctions.generatePw();
 
             Employee employee = new Employee()
             {
@@ -46,6 +47,7 @@ namespace ApiPackExpress.Services
 
             try
             {
+                
                 using (var sqlCon = _connection.GetSqlConnection(_connection.GetConnectionString()))
                 {
                     int statusQuery = 0;
@@ -59,11 +61,20 @@ namespace ApiPackExpress.Services
                     cmd.Parameters.AddWithValue("@_address", employee.Address);
                     cmd.Parameters.AddWithValue("@_createdAt", CastDate.castDateFormatSQL(employee.CreatedAt));
                     cmd.Parameters.AddWithValue("@_modifiedAt", CastDate.castDateFormatSQL(employee.ModifiedAt));
-                    cmd.Parameters.AddWithValue("@_username", employee.Username);
+                    if (!existUsername(employee.Username))
+                    {
+                        cmd.Parameters.AddWithValue("@_username", employee.Username);
+                    }
+                    else
+                    {
+                        string birthdate = employee.Birthdate.ToString("yyyy-MM-dd");
+                        employee.Username = employee.Username + birthdate.Substring(2,2);
+                        cmd.Parameters.AddWithValue("@_username", employee.Username);
+                    }
                     cmd.Parameters.AddWithValue("@_idGender", employee.GenderId);
                     cmd.Parameters.AddWithValue("@_idPosition", employee.PositionId);
                     cmd.Parameters.AddWithValue("@_idBranch", employee.BranchId);
-                    cmd.Parameters.AddWithValue("@_pw", pwLog.Password);
+                    cmd.Parameters.AddWithValue("@_pw", Helpers.Encrypter.EncryptString(pw));
                     cmd.Parameters.AddWithValue("@_expDate", pwLog.ExpirationDate);
                     cmd.Parameters.AddWithValue("@_ip", pwLog.Ip);
                     cmd.Parameters.AddWithValue("@_statusQuery", statusQuery);
@@ -73,7 +84,11 @@ namespace ApiPackExpress.Services
 
                     _resp.status = 200;
                     _resp.message = "Ok";
-                    _resp.data = null;
+                    _resp.data = new AuthDto()
+                    {
+                        username = employee.Username,
+                        password = pw
+                    };
                 }
             }catch(Exception ex)
             {
@@ -83,11 +98,46 @@ namespace ApiPackExpress.Services
                 _bitacoraWsService.InsertBitacoraWS(bitacoraWS);
 
                 _resp.status = 500;
-                _resp.message = "Internar Server Error";
+                _resp.message = "Internar Server Error,\n Si el problema persiste comunicate con el administrador";
             }
-          
-
             return _resp;
         }
+        public bool existUsername(string username)
+        {
+            bitacoraWS = new BitacoraWS("Ok", "ExistUsername-Function", "admin");
+            bool exist = false;
+            int resultSP = 0;
+            try
+            {
+                using (var sqlConn = _connection.GetSqlConnection(_connection.GetConnectionString()))
+                {
+                    SqlCommand cmd = new SqlCommand("SPExistUsername", sqlConn);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@_username", username);
+                    cmd.Parameters.AddWithValue("@_existUsername", resultSP);
+
+                    SqlDataReader rdr = cmd.ExecuteReader();
+
+                    if(resultSP > 0)
+                    {
+                        exist = true;
+                    }
+                    else
+                    {
+                        exist = false;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                bitacoraWS.DateEnd = DateTime.Now;
+                bitacoraWS.MessageError = ex.Message + "\n " + ex.ToString();
+                _bitacoraWsService.InsertBitacoraWS(bitacoraWS);
+                exist = false;
+            }
+            return exist;
+        }
     }
+
+
 }

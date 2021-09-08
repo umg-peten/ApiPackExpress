@@ -10,5 +10,7 @@ namespace ApiPackExpress.IServices
     public interface IAuthService
     {
         public oResponse Authentication(AuthDto auth);
+        public oResponse ChangePw(string pw, int idEmployee);
+    
     }
 }

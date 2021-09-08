@@ -10,5 +10,6 @@ namespace ApiPackExpress.IServices
     public interface IEmployeeService
     {
         public oResponse addEmployee(EmployeeRequestDTO emp);
+       
     }
 }

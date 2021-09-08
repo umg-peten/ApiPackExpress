@@ -9,5 +9,6 @@ namespace ApiPackExpress.IServices
     public interface ILoginLogService
     {
         public void insertLoginLog(LoginLog loginlog);
+        public bool verifyPasswordUsed(string pw, int idUser);
     }
 }

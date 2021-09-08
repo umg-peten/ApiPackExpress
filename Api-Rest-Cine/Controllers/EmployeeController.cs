@@ -19,10 +19,14 @@ namespace ApiPackExpress.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employee;
+        private readonly ILoginLogService _log;
+        private readonly IAuthService _auth;
         private oResponse resp;
 
-        public EmployeeController(IEmployeeService employe)
+        public EmployeeController(IEmployeeService employe, ILoginLogService log, IAuthService auth)
         {
+            this._auth = auth;
+            this._log = log;
             this._employee = employe;
         }
 
@@ -38,12 +42,49 @@ namespace ApiPackExpress.Controllers
                 resp.data = new Object();
                 return Unauthorized(resp);
             }
-            else
-            {
-                var emp = _employee.addEmployee(employee);
-                return Ok(emp);
-            }
             
+            var emp = _employee.addEmployee(employee);
+
+            switch(emp.status){
+                case 200:
+                    return Ok(emp);
+
+                case 500:
+                    return StatusCode(500, resp);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("ChangePassword")]
+        public IActionResult ChangePassword(PasswordDTO pw)
+        {
+            resp = new oResponse();
+
+            if(pw.Password != pw.ConfirmPassword)
+            {
+                resp.status = 1010;
+                resp.message = "Las contraseñas no coinciden";
+                return Ok(resp);
+            }
+
+            if(_log.verifyPasswordUsed(pw.Password, HelpersFunctions.getIdUser(User.Claims.ToList())))
+            {
+                resp.status = 1011;
+                resp.message = "La contraseña ya ha sido utilizada, intente con otra";
+                return Ok(resp);
+            }
+
+            resp = _auth.ChangePw(pw.Password, HelpersFunctions.getIdUser(User.Claims.ToList()));
+            
+            if(resp.status == 500)
+            {
+                return StatusCode(500, resp);
+            }
+
+            return Ok(resp);
+
         }
     }
 }

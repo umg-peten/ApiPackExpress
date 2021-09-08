@@ -1,8 +1,10 @@
 ﻿using ApiPackExpress.Dtos;
 using ApiPackExpress.IServices;
 using ApiPackExpress.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -106,6 +108,59 @@ namespace ApiPackExpress.Services
 
             }
 
+            return oResponse;
+        }
+
+        public oResponse ChangePw(string pw, int idEmployee)
+        {
+            oResponse = new oResponse();
+            bitacoraWS = new BitacoraWS("Ok", "ChangePw", "admin");
+
+            try
+            {
+                using (var sqlCon = _connection.GetSqlConnection(_connection.GetConnectionString()))
+                {
+                    bool respSP = false;
+                    SqlCommand cmd = new SqlCommand("SPChangePW", sqlCon);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@_idEmployee", idEmployee);
+                    cmd.Parameters.AddWithValue("@_pw", Helpers.Encrypter.EncryptString(pw));
+                    cmd.Connection.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.RecordsAffected > 0)
+                    {
+                        oResponse.status = 1012;
+                        oResponse.message = "Password actualizada correctamente";
+                        DateTime expirationDate = DateTime.Now.AddDays(30);
+                        oResponse.data = Helpers.CastDate.castDateFormatSQL(expirationDate);
+                       
+                    }
+                    else
+                    {
+                        oResponse.status = 500;
+                        oResponse.message = "Ha ocurrido un error en el servidor, intente nuevamente, si el problema persiste, contacta el administrador del sistema";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                BitacoraJSON jsonObject = new BitacoraJSON();
+                jsonObject.HResult = ex.HResult;
+                jsonObject.StackTrace = ex.StackTrace;
+                jsonObject.Exception = ex.ToString();
+                jsonObject.Message = ex.Message;
+                string json = JsonConvert.SerializeObject(jsonObject);
+
+                bitacoraWS.DateEnd = DateTime.Now;
+                bitacoraWS.MessageError = json;
+
+                _bitacoraWS.InsertBitacoraWS(bitacoraWS);
+                oResponse.status = 500;
+                oResponse.message = "Ha ocurrido un error en el servidor, intente nuevamente, si el problema persiste, contacta el administrador del sistema";
+            }
             return oResponse;
         }
     }
