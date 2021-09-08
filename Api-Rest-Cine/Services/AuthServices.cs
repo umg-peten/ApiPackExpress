@@ -133,6 +133,8 @@ namespace ApiPackExpress.Services
                     {
                         oResponse.status = 1012;
                         oResponse.message = "Password actualizada correctamente";
+                        DateTime expirationDate = DateTime.Now.AddDays(30);
+                        oResponse.data = Helpers.CastDate.castDateFormatSQL(expirationDate);
                        
                     }
                     else
