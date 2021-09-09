@@ -40,6 +40,7 @@ namespace ApiPackExpress
             services.AddScoped<IBitacoraWSService, BitacoraWsService>();
             services.AddScoped<ILoginLogService, LoginLogService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IBranchService, BranchService>();
 
 
 

@@ -12,9 +12,8 @@ namespace ApiPackExpress.Models
         public string Telephone { get; set; }
         public string Address { get; set; }
         public DateTime DateCreated { get; set; }
-        public float CoorX { get; set; }
-        public float CoorY { get; set; }
-        public Municipality municipality { get; set; }
-        public Company company { get; set; }
+        public string CoorX { get; set; }
+        public string CoorY { get; set; } 
+        public Municipality Municipality { get; set; }
     }
 }
